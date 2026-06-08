@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 
 interface Score {
@@ -9,16 +10,18 @@ interface Score {
 }
 
 export default function Scores() {
-  const { user, token, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [scores, setScores] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/scores', { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(data => { setScores(data); setLoading(false); });
-  }, [token]);
+    supabase
+      .from('scores')
+      .select('score, created_at')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => { setScores(data ?? []); setLoading(false); });
+  }, []);
 
   function handleSignOut() {
     signOut();

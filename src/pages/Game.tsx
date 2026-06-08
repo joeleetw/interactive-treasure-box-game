@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import keyIcon from '@/assets/key.png';
 import closedChest from '@/assets/treasure_closed.png';
 import treasureChest from '@/assets/treasure_opened.png';
@@ -20,7 +21,7 @@ export default function Game() {
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [score, setScore] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
-  const { user, token, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isGuest = location.state?.guest === true;
@@ -36,12 +37,8 @@ export default function Game() {
 
   async function handleGameEnd(finalScore: number) {
     setGameEnded(true);
-    if (!isGuest && user && token) {
-      await fetch('/api/scores', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ score: finalScore }),
-      });
+    if (!isGuest && user) {
+      await supabase.from('scores').insert({ score: finalScore });
     }
   }
 
