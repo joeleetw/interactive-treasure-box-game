@@ -5,7 +5,19 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Interactive Treasure Box Game</title>
-      <script type="module" crossorigin src="/interactive-treasure-box-game/assets/index-C7pVgMhu.js"></script>
+      <script>
+        // Decode path redirected by 404.html for GitHub Pages SPA routing
+        (function() {
+          var p = new URLSearchParams(window.location.search).get('p');
+          if (p) {
+            var q = new URLSearchParams(window.location.search).get('q');
+            window.history.replaceState(null, null,
+              window.location.pathname + p + (q ? '?' + q.replace(/~and~/g, '&') : '') + window.location.hash
+            );
+          }
+        })();
+      </script>
+      <script type="module" crossorigin src="/interactive-treasure-box-game/assets/index-DC6rCRgZ.js"></script>
       <link rel="stylesheet" crossorigin href="/interactive-treasure-box-game/assets/index-CrIFhWsR.css">
     </head>
 
