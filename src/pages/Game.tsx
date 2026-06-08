@@ -38,7 +38,7 @@ export default function Game() {
   async function handleGameEnd(finalScore: number) {
     setGameEnded(true);
     if (!isGuest && user) {
-      await supabase.from('scores').insert({ score: finalScore });
+      await supabase.from('scores').insert({ score: finalScore, user_id: user.id });
     }
   }
 
